@@ -14,6 +14,9 @@
 		zoomPoint,
 		viewPoint,
 		safePoint,
+		zoomOffset,
+		viewOffset,
+		safeOffset,
 		keypadSize,
 		zoomSize,
 		viewSize,
@@ -43,9 +46,12 @@
 
 	$: console.log('device zoom scale', $zoomScale);
 	$: console.log($keys);
-	$: [zoom_left, zoom_top] = $zoomPoint;
-	$: [view_left, view_top] = $viewPoint;
-	$: [safe_left, safe_top] = $safePoint;
+	$: [zoom_top, zoom_right, zoom_bottom, zoom_left] = $zoomOffset;
+	$: [view_top, view_right, view_bottom, view_left] = $viewOffset;
+	$: [safe_top, safe_right, safe_bottom, safe_left] = $safeOffset;
+	$: [zoom_point_left, zoom_point_top] = $zoomPoint;
+	$: [view_point_left, view_point_top] = $viewPoint;
+	$: [safe_point_left, safe_point_top] = $safePoint;
 	$: [zoom_width, zoom_height] = $zoomSize;
 	$: [view_width, view_height] = $viewSize;
 	$: [safe_width, safe_height] = $safeSize;
@@ -66,3 +72,62 @@
 <h1>Welcome to your library project</h1>
 <p>Create your package using @sveltejs/package and preview/showcase your work with SvelteKit</p>
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+
+<hr />
+<h3>window zoom offset</h3>
+<table>
+	<tr>
+		<td />
+		<td>{$zoomOffset[0]}</td>
+		<td />
+	</tr>
+	<tr>
+		<td>{$zoomOffset[3]}</td>
+		<td>{Math.floor($zoomScale * 10) / 10}</td>
+		<td>{$zoomOffset[1]}</td>
+	</tr>
+	<tr>
+		<td />
+		<td>{$zoomOffset[2]}</td>
+		<td />
+	</tr>
+</table>
+<hr />
+<h3>view offset</h3>
+<table>
+	<tr>
+		<td />
+		<td>{$viewOffset[0]}</td>
+		<td />
+	</tr>
+	<tr>
+		<td>{$viewOffset[3]}</td>
+		<td />
+		<td>{$viewOffset[1]}</td>
+	</tr>
+	<tr>
+		<td />
+		<td>{$viewOffset[2]}</td>
+		<td />
+	</tr>
+</table>
+<hr />
+<h3>safe offset</h3>
+<table>
+	<tr>
+		<td />
+		<td>{$safeOffset[0]}</td>
+		<td />
+	</tr>
+	<tr>
+		<td>{$safeOffset[3]}</td>
+		<td />
+		<td>{$safeOffset[1]}</td>
+	</tr>
+	<tr>
+		<td />
+		<td>{$safeOffset[2]}</td>
+		<td />
+	</tr>
+</table>
+<hr />

@@ -1,21 +1,24 @@
-import { listen } from 'svelte/internal';
+import { listen, once } from 'svelte/internal';
+import { onMount } from 'svelte';
 import { __BROWSER__ } from 'svelte-petit-utils';
 import { state, isOnline, isWatching, isActive } from './store';
 
-export default function browserInit() {
-	if (!__BROWSER__) return () => {};
-	const byes = [
-		listen(window, 'offline', setOnLine),
-		listen(window, 'online', setOnLine),
-		listen(window, 'visibilitychange', setVisibilityState)
-	];
-	setOnLine();
-	setVisibilityState();
+const browserInit = once(() => {
+	onMount(() => {
+		const byes = [
+			listen(window, 'offline', setOnLine),
+			listen(window, 'online', setOnLine),
+			listen(window, 'visibilitychange', setVisibilityState)
+		];
+		setOnLine();
+		setVisibilityState();
 
-	return () => {
-		byes.forEach((fn) => fn());
-	};
-}
+		return () => {
+			byes.forEach((fn) => fn());
+		};
+	});
+});
+export default browserInit;
 
 function setActive() {
 	isActive.set(state.isOnline && state.isWatching);

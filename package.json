@@ -1,6 +1,6 @@
 {
 	"name": "svelte-browser",
-	"version": "0.3.14",
+	"version": "0.3.15",
 	"homepage": "https://github.com/7korobi/svelte-browser/blob/main/src/lib/",
 	"license": "MIT",
 	"keywords": [
@@ -16,7 +16,7 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "svelte-kit sync && svelte-package",
-		"publish": "cd package && npm publish",
+		"publish": "svelte-kit sync && svelte-package && cd package && npm publish",
 		"test": "playwright test",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -28,6 +28,7 @@
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
 		"@sveltejs/package": "next",
+		"@types/ua-parser-js": "^0.7.36",
 		"prettier": "^2.7.1",
 		"prettier-plugin-svelte": "^2.7.0",
 		"svelte": "^3.50.1",

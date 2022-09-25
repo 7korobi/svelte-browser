@@ -20,10 +20,10 @@ const vp = __BROWSER__ ? window.visualViewport || default_vp : default_vp;
 
 class AreaBox {
 	size: SIZE;
-	point: POINT;
-	offset: OFFSET;
+	point!: POINT;
+	offset!: OFFSET;
 
-	constructor({ width, height, scale }) {
+	constructor({ width, height, scale }: { width: number; height: number; scale: number }) {
 		this.size = [width * scale, height * scale];
 
 		this.measureSize(width, height);
@@ -47,16 +47,16 @@ class AreaBox {
 }
 
 export const state = {
-	isActive: false,
-	isOnline: false,
-	isWatching: false,
+	isActive: true,
+	isOnline: true,
+	isWatching: true,
 
 	isKeypad: false,
 	isPortrait: false,
 	isLandscape: false,
 	isZoom: false,
 
-	keys: [],
+	keys: [] as string[],
 
 	scale: vp.scale,
 	keypad: {

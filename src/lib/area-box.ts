@@ -1,4 +1,5 @@
-import { listen } from 'svelte/internal';
+import { listen, once } from 'svelte/internal';
+import { onMount } from 'svelte';
 import { __BROWSER__ } from 'svelte-petit-utils';
 import { isAndroid, isIOS } from './device';
 import {
@@ -18,27 +19,28 @@ import {
 	safeSize
 } from './store';
 
-export default function areaBoxInit() {
-	if (!__BROWSER__) return () => {};
+const areaBoxInit = once(() => {
+	onMount(() => {
+		const bodyObserve = new ResizeObserver(onScroll);
+		bodyObserve.observe(document.body);
 
-	const bodyObserve = new ResizeObserver(onScroll);
-	bodyObserve.observe(document.body);
+		const byes = [
+			listen(window, 'scroll', onScrollNotZoom, { passive: true }),
+			listen(window.visualViewport!, 'scroll', onScrollInZoom),
+			listen(window.visualViewport!, 'resize', onResize)
+		];
 
-	const byes = [
-		listen(window, 'scroll', onScrollNotZoom, { passive: true }),
-		listen(window.visualViewport!, 'scroll', onScrollInZoom),
-		listen(window.visualViewport!, 'resize', onResize)
-	];
+		onResize();
 
-	onResize();
+		return () => {
+			bodyObserve.unobserve(document.body);
+			bodyObserve.disconnect();
 
-	return () => {
-		bodyObserve.unobserve(document.body);
-		bodyObserve.disconnect();
-
-		byes.forEach((fn) => fn());
-	};
-}
+			byes.forEach((fn) => fn());
+		};
+	});
+});
+export default areaBoxInit;
 
 function onScrollNotZoom() {
 	onScroll();
