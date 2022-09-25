@@ -1,7 +1,7 @@
 import { listen, once } from 'svelte/internal';
 import { onMount } from 'svelte';
 import { __BROWSER__ } from 'svelte-petit-utils';
-import { state, isOnline, isWatching, isActive } from './store';
+import { state, isOnline, isWatching, isActive } from './store.js';
 
 const browserInit = once(() => {
 	onMount(() => {

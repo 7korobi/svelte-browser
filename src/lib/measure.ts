@@ -1,4 +1,4 @@
-import * as store from './store';
+import * as store from './store.js';
 import { __BROWSER__ } from 'svelte-petit-utils';
 
 export function KeypadSize({ style }: HTMLElement) {

@@ -1,7 +1,7 @@
 import { listen, once } from 'svelte/internal';
 import { onMount } from 'svelte';
 import { __BROWSER__ } from 'svelte-petit-utils';
-import { isAndroid, isIOS } from './device';
+import { isAndroid, isIOS } from './device.js';
 import {
 	state,
 	isZoom,
@@ -17,7 +17,7 @@ import {
 	zoomSize,
 	viewSize,
 	safeSize
-} from './store';
+} from './store.js';
 
 const areaBoxInit = once(() => {
 	onMount(() => {
