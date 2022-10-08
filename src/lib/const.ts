@@ -5,4 +5,4 @@ export const SAFE_HEIGHT = 21;
 export const MIN_THRESHOLD = 25;
 export const PER_THRESHOLD = 0.15;
 export const SWIPE_LIMIT = 10;
-export const STOP_LIMIT = 8;
+export const PRESS_LIMIT = 8;
