@@ -1,6 +1,8 @@
 import { listen, once } from 'svelte/internal';
 import { onMount } from 'svelte';
 import { __BROWSER__ } from 'svelte-petit-utils';
+
+import { MIN_THRESHOLD, PER_THRESHOLD } from './const.js';
 import { isAndroid, isIOS } from './device.js';
 import {
 	state,
@@ -90,6 +92,11 @@ function onResize() {
 	zoomSize.set(state.zoom.size);
 	viewSize.set(state.view.size);
 	safeSize.set(state.safe.size);
+
+	state.threshold = [
+		Math.max(MIN_THRESHOLD, Math.ceil(PER_THRESHOLD * width)),
+		Math.max(MIN_THRESHOLD, Math.ceil(PER_THRESHOLD * height))
+	];
 }
 
 function FollowZoom(width: number, height: number, scale: number) {

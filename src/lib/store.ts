@@ -52,7 +52,9 @@ export const state = {
 	},
 	zoom: new AreaBox(vp),
 	view: new AreaBox(vp),
-	safe: new AreaBox(vp)
+	safe: new AreaBox(vp),
+
+	threshold: [0, 0] as SIZE
 };
 
 export const isActive = writable(state.isActive);
