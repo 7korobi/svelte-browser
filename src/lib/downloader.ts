@@ -1,4 +1,5 @@
 import { listen } from 'svelte/internal';
+import { timeout } from 'svelte-petit-utils';
 
 export function readyDownload(
 	el: HTMLImageElement | HTMLIFrameElement,
@@ -6,8 +7,8 @@ export function readyDownload(
 	timeout = 20000
 ): Promise<Event> {
 	return new Promise((ok, ng) => {
-		const timer = setTimeout(fail, timeout);
 		const byes = [
+			timeout(fail, timeout),
 			listen(el, '--abort', fail),
 			listen(el, 'error', fail),
 			listen(el, 'load', success)
@@ -15,7 +16,6 @@ export function readyDownload(
 		el.src = url;
 
 		function bye() {
-			clearTimeout(timer);
 			byes.forEach((fn) => fn());
 		}
 

@@ -11,7 +11,7 @@ specifiers:
   prettier-plugin-svelte: ^2.7.1
   svelte: ^3.50.1
   svelte-check: ^2.9.1
-  svelte-petit-utils: ^0.1.8
+  svelte-petit-utils: ^0.2.0
   svelte-preprocess: ^4.10.7
   tslib: ^2.4.0
   typescript: ^4.8.4
@@ -19,7 +19,7 @@ specifiers:
   vite: ^3.1.6
 
 dependencies:
-  svelte-petit-utils: 0.1.8
+  svelte-petit-utils: 0.2.0
   tslib: 2.4.0
   ua-parser-js: 0.7.31
 
@@ -1791,8 +1791,8 @@ packages:
       svelte: 3.50.1
     dev: true
 
-  /svelte-petit-utils/0.1.8:
-    resolution: {integrity: sha512-iKKFLKNAjOH30Liw3tfjpTrEoAFE9/jOQ1Y3P5bm6aI/Z7JpEerA9/mGsPJ5nCgDPjnBWUdxDuWg237ooVRD+g==}
+  /svelte-petit-utils/0.2.0:
+    resolution: {integrity: sha512-g47+pNtcGpD3PX8galpoZkJsbUVHNWsF7EJsRQTxov1BhFeZQASgGbxNbbcBy8WEOCtHkvH9PYNOzGHMocKM2A==}
     dependencies:
       tslib: 2.4.0
     dev: false

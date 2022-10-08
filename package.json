@@ -1,6 +1,6 @@
 {
 	"name": "svelte-browser",
-	"version": "0.3.18",
+	"version": "0.3.19",
 	"homepage": "https://github.com/7korobi/svelte-browser/blob/main/src/lib/",
 	"license": "MIT",
 	"keywords": [
@@ -40,7 +40,7 @@
 		"vite": "^3.1.6"
 	},
 	"dependencies": {
-		"svelte-petit-utils": "^0.1.8",
+		"svelte-petit-utils": "^0.2.0",
 		"tslib": "^2.4.0",
 		"ua-parser-js": "^0.7.31"
 	}
