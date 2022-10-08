@@ -1,6 +1,23 @@
 <script lang="ts">
 	import store, { KeyCapture, Browser, Viewport } from '$lib';
-	import { isPC, isTablet, isMobile, isBlink, isMacSafari, isIOSlegacy, isLegacy } from '$lib';
+	import {
+		ua,
+		cpu,
+		device,
+		browser,
+		engine,
+		os,
+		isLegacy,
+		isRadius,
+		isIOS,
+		isAndroid,
+		isPC,
+		isTablet,
+		isMobile,
+		isBlink,
+		isMacSafari,
+		isIOSlegacy
+	} from '$lib';
 	const {
 		isActive,
 		isOnline,
@@ -23,28 +40,6 @@
 		safeSize
 	} = store;
 
-	if (isTablet) console.log('device is Tablet'); // device type Tablet
-	if (isMobile) console.log('device is Mobile'); // device type Mobile
-	if (isPC) console.log('device is PC'); // not Tablet / Mobile / Android / IOS
-	if (isBlink) console.log('device is Blink'); // blink browser
-	if (isMacSafari) console.log('device is Mac Safari'); // webkit browser && Mac OS
-	if (isIOSlegacy) console.log('device is IOS legacy'); // IOS && legacy
-	if (isLegacy) console.log('device is Legacy'); // not support VisualViewport / ResizeObaserver / IntersectionObserver
-
-	$: if ($isActive) console.log('device is Active');
-	else console.log('device is not Active'); // isOnline && isWatching
-	$: if ($isOnline) console.log('device is Online');
-	else console.log('device is not Online'); // detect online
-	$: if ($isWatching) console.log('device is Watching');
-	else console.log('device is not Watching'); // visible visibilityState
-	$: if ($isKeypad) console.log('device has software Keypad Area');
-	else console.log('device has not software Keypad Area'); // soft keypad detect
-	$: if ($isPortrait) console.log('device is Portrait'); // width < height
-	$: if ($isLandscape) console.log('device is Landscape'); // height < width
-	$: if ($isZoom) console.log('device is Zoom');
-	else console.log('device is not Zoom'); // 1.0 < zoomScale
-
-	$: console.log('device zoom scale', $zoomScale);
 	$: console.log($keys);
 	$: [zoom_top, zoom_right, zoom_bottom, zoom_left] = $zoomOffset;
 	$: [view_top, view_right, view_bottom, view_left] = $viewOffset;
@@ -59,9 +54,6 @@
 	$: console.log('$zoomPoint', $zoomPoint);
 	$: console.log('$viewPoint', $viewPoint);
 	$: console.log('$safePoint', $safePoint);
-	$: console.log('$zoomSize', $zoomSize);
-	$: console.log('$viewSize', $viewSize);
-	$: console.log('$safeSize', $safeSize);
 	$: console.log('$keypadSize', $keypadSize);
 </script>
 
@@ -74,21 +66,52 @@
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 
 <hr />
+<h3>state & device</h3>
+<p>
+	{#if $isPortrait}<span>Portrait size</span>{/if}
+	{#if $isLandscape}<span>Landscape size</span>{/if}
+	{#if $isKeypad}<span>Keypad Area</span>{/if}
+	{#if $isZoom}<span>in Zoom</span>{/if}
+	{#if $isOnline}<span>Online</span>{:else}<span>Offline</span>{/if}
+	{#if $isWatching}<span>Watching</span>{/if}
+	{#if $isActive}<span>Active</span>{/if}
+</p>
+<p>
+	{#if isLegacy}<span>legacy browser</span>{:else}<span>modern browser</span>{/if}
+	{#if isRadius}<span>radius</span>{/if}
+	{#if isIOS}<span>IOS</span>{/if}
+	{#if isAndroid}<span>Android</span>{/if}
+	{#if isPC}<span>PC (not Tablet / Mobile / Android / IOS)</span>{/if}
+	{#if isTablet}<span>Tablet</span>{/if}
+	{#if isMobile}<span>Mobile</span>{/if}
+	{#if isBlink}<span>Blink</span>{/if}
+	{#if isMacSafari}<span>Mac Safari (Mac OS & webkit)</span>{/if}
+	{#if isIOSlegacy}<span>IOS & legacy</span>{/if}
+</p>
+<input type="text" value="for soft keyboard area test." />
+<p>(press keys) : {$keys}</p>
+<p>UA : {ua}</p>
+<p>CPU : {cpu.architecture}</p>
+<p>DEVICE : {device.vendor} {device.model} {device.type}</p>
+<p>BROWSER : {browser.name} {browser.major} {browser.version}</p>
+<p>ENGINE : {engine.name} {engine.version}</p>
+<p>OS : {os.name} {os.version}</p>
+<hr />
 <h3>window zoom offset</h3>
 <table>
 	<tr>
 		<td />
-		<td>{$zoomOffset[0]}</td>
+		<td>{zoom_top}</td>
 		<td />
 	</tr>
 	<tr>
-		<td>{$zoomOffset[3]}</td>
+		<td>{zoom_left}</td>
 		<td>{Math.floor($zoomScale * 10) / 10}</td>
-		<td>{$zoomOffset[1]}</td>
+		<td>{zoom_right}</td>
 	</tr>
 	<tr>
 		<td />
-		<td>{$zoomOffset[2]}</td>
+		<td>{zoom_bottom}</td>
 		<td />
 	</tr>
 </table>
@@ -97,17 +120,17 @@
 <table>
 	<tr>
 		<td />
-		<td>{$viewOffset[0]}</td>
+		<td>{view_top}</td>
 		<td />
 	</tr>
 	<tr>
-		<td>{$viewOffset[3]}</td>
+		<td>{view_left}</td>
 		<td />
-		<td>{$viewOffset[1]}</td>
+		<td>{view_right}</td>
 	</tr>
 	<tr>
 		<td />
-		<td>{$viewOffset[2]}</td>
+		<td>{view_bottom}</td>
 		<td />
 	</tr>
 </table>
@@ -116,18 +139,41 @@
 <table>
 	<tr>
 		<td />
-		<td>{$safeOffset[0]}</td>
+		<td>{safe_top}</td>
 		<td />
 	</tr>
 	<tr>
-		<td>{$safeOffset[3]}</td>
+		<td>{safe_left}</td>
 		<td />
-		<td>{$safeOffset[1]}</td>
+		<td>{safe_right}</td>
 	</tr>
 	<tr>
 		<td />
-		<td>{$safeOffset[2]}</td>
+		<td>{safe_bottom}</td>
 		<td />
 	</tr>
 </table>
 <hr />
+<h3>safe offset</h3>
+<div class="view">
+	<p>view {view_width}px x {view_height}px</p>
+	<div class="safe">
+		<p>safe {safe_width}px x {safe_height}px</p>
+		<div class="zoom">
+			<p>zoom {zoom_width}px x {zoom_height}px</p>
+		</div>
+	</div>
+</div>
+<hr />
+
+<style>
+	.view,
+	.safe,
+	.zoom {
+		margin: 3px;
+		border: 1px solid green;
+	}
+	span {
+		border: 1px solid gray;
+	}
+</style>

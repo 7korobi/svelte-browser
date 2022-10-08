@@ -1,7 +1,8 @@
 import { UAParser } from 'ua-parser-js';
 import { __BROWSER__ } from 'svelte-petit-utils';
+import { listen } from 'svelte/internal';
 
-const { device, browser, engine, os } = (UAParser as unknown as () => UAParser.IResult)();
+const { ua, browser, engine, os, cpu, device } = new UAParser().getResult() as UAParser.IResult;
 
 let isLegacy = false;
 let isRadius = false;
@@ -18,8 +19,27 @@ let isWebkit = false;
 
 let isMacSafari = false;
 let isIOSlegacy = false;
+
+// Passive feature detection.
+let canPassive = false;
+
 if (__BROWSER__) {
 	isLegacy = !window.VisualViewport || !window.ResizeObserver || !window.IntersectionObserver;
+	if (!isLegacy) {
+		try {
+			isLegacy = true;
+			listen(
+				window,
+				'test',
+				null!,
+				Object.defineProperty({}, 'passive', {
+					get: function () {
+						isLegacy = false;
+					}
+				})
+			);
+		} catch (err) {}
+	}
 }
 
 switch (device.type) {
@@ -78,6 +98,8 @@ if (isMobile) {
 }
 
 export {
+	ua,
+	cpu,
 	device,
 	browser,
 	engine,
