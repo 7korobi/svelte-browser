@@ -88,6 +88,7 @@
 	{#if isMacSafari}<span>Mac Safari (Mac OS & webkit)</span>{/if}
 	{#if isIOSlegacy}<span>IOS & legacy</span>{/if}
 </p>
+<p>keypad size : {keypad_width} x {keypad_height}</p>
 <input type="text" value="for soft keyboard area test." />
 <p>(press keys) : {$keys}</p>
 <p>UA : {ua}</p>
