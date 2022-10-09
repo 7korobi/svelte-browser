@@ -152,7 +152,7 @@ function FollowKeypad(w2: number, h2: number) {
 			if (innerHeight < innerHeightOld) {
 				const kbdHeight = innerHeightOld - innerHeight;
 				if (80 < kbdHeight) {
-					state.isKeypad = false;
+					state.isKeypad = true;
 					state.keypad.size = [state.zoom.size[0], kbdHeight];
 				}
 			}
