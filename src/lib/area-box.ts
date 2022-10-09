@@ -143,14 +143,14 @@ function FollowKeypad(w2: number, h2: number) {
 	if (isAndroid) {
 		if (innerWidth === innerWidthOld) {
 			if (innerHeightOld < innerHeight) {
-				const kbdHeight = innerHeight - innerHeightOld;
+				const kbdHeight = (innerHeight - innerHeightOld) / state.scale;
 				if (80 < kbdHeight) {
 					state.isKeypad = false;
 					state.keypad.size = [state.zoom.size[0], kbdHeight];
 				}
 			}
 			if (innerHeight < innerHeightOld) {
-				const kbdHeight = innerHeightOld - innerHeight;
+				const kbdHeight = (innerHeightOld - innerHeight) / state.scale;
 				if (80 < kbdHeight) {
 					state.isKeypad = true;
 					state.keypad.size = [state.zoom.size[0], kbdHeight];
