@@ -134,24 +134,25 @@ let innerWidthOld = 0;
 let innerHeightOld = 0;
 function FollowKeypad(w2: number, h2: number) {
 	const { innerWidth, innerHeight } = window;
+	const keypadMinLimit = state.zoom.size[0] * 0.5;
 
 	if (isIOS) {
 		const kbdHeight = innerHeight - h2;
-		state.isKeypad = 80 < kbdHeight;
+		state.isKeypad = keypadMinLimit < kbdHeight;
 		state.keypad.size = [state.zoom.size[0], kbdHeight];
 	}
 	if (isAndroid) {
 		if (innerWidth === innerWidthOld) {
 			if (innerHeightOld < innerHeight) {
 				const kbdHeight = (innerHeight - innerHeightOld) / state.scale;
-				if (80 < kbdHeight) {
+				if (keypadMinLimit < kbdHeight) {
 					state.isKeypad = false;
 					state.keypad.size = [state.zoom.size[0], kbdHeight];
 				}
 			}
 			if (innerHeight < innerHeightOld) {
 				const kbdHeight = (innerHeightOld - innerHeight) / state.scale;
-				if (80 < kbdHeight) {
+				if (keypadMinLimit < kbdHeight) {
 					state.isKeypad = true;
 					state.keypad.size = [state.zoom.size[0], kbdHeight];
 				}

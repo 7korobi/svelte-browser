@@ -34,6 +34,43 @@ class AreaBox {
 	}
 }
 
+export const xyz_new = () => ({
+	label: '',
+	x: 0,
+	y: 0,
+	z: 0
+});
+
+export const abg_new = () => ({
+	label: '',
+	alpha: 0,
+	beta: 0,
+	gamma: 0,
+	absolute: false
+});
+
+export const geo_new: () => {
+	label: string;
+	timestamp: number;
+	accuracy: number;
+	altitudeAccuracy: number | null;
+	longitude: number;
+	latitude: number;
+	altitude: number | null;
+	heading: number | null;
+	speed: number | null;
+} = () => ({
+	label: '',
+	timestamp: 0,
+	accuracy: 0,
+	altitudeAccuracy: null,
+	longitude: 0,
+	latitude: 0,
+	altitude: null,
+	heading: null,
+	speed: null
+});
+
 export const state = {
 	isActive: true,
 	isOnline: true,
@@ -54,7 +91,17 @@ export const state = {
 	view: new AreaBox(vp),
 	safe: new AreaBox(vp),
 
-	threshold: [0, 0] as SIZE
+	threshold: [0, 0] as SIZE,
+
+	locate: geo_new(),
+	gyro: abg_new(),
+	gravity: xyz_new(),
+	rotate: abg_new(),
+	accel: xyz_new(),
+	speed: xyz_new(),
+	point: xyz_new(),
+
+	gamepads: [] as Gamepad[]
 };
 
 export const isActive = writable(state.isActive);

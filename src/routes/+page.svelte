@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { SIZE } from 'svelte-petit-utils';
 	import store, { KeyCapture, Browser, Viewport } from '$lib';
 	import {
 		ua,
@@ -16,8 +17,17 @@
 		isMobile,
 		isBlink,
 		isMacSafari,
-		isIOSlegacy
+		isIOSlegacy,
+		locate,
+		gyro,
+		gravity,
+		rotate,
+		accel,
+		speed,
+		point,
+		gamepads
 	} from '$lib';
+
 	const {
 		isActive,
 		isOnline,
@@ -39,6 +49,11 @@
 		viewSize,
 		safeSize
 	} = store;
+
+	let v = [0, 0] as SIZE;
+	let sv = [0, 0] as SIZE;
+	let lv = [0, 0] as SIZE;
+	let dv = [0, 0] as SIZE;
 
 	$: console.log($keys);
 	$: [zoom_top, zoom_right, zoom_bottom, zoom_left] = $zoomOffset;
@@ -166,8 +181,71 @@
 	</div>
 </div>
 <hr />
+<p>
+	vw,vh : {v}
+</p>
+<p>
+	svw,svh : {sv}
+</p>
+<p>
+	lvw,lvh : {lv}
+</p>
+<p>
+	dvw,dvh : {dv}
+</p>
+<p />
+<hr />
+<p>
+	locate : {JSON.stringify($locate)}
+</p>
+<p>
+	gyro : {JSON.stringify($gyro)}
+</p>
+<p>
+	gravity : {JSON.stringify($gravity)}
+</p>
+<p>
+	rotate : {JSON.stringify($rotate)}
+</p>
+<p>
+	accel : {JSON.stringify($accel)}
+</p>
+<p>
+	speed : {JSON.stringify($speed)}
+</p>
+<p>
+	point : {JSON.stringify($point)}
+</p>
+<p>
+	gamepads : {JSON.stringify($gamepads)}
+</p>
+
+<div class="v" bind:clientWidth={v[0]} bind:clientHeight={v[1]}>.</div>
+<div class="sv" bind:clientWidth={sv[0]} bind:clientHeight={sv[1]}>.</div>
+<div class="lv" bind:clientWidth={lv[0]} bind:clientHeight={lv[1]}>.</div>
+<div class="dv" bind:clientWidth={dv[0]} bind:clientHeight={dv[1]}>.</div>
 
 <style>
+	.v {
+		width: 100vw;
+		height: 100vh;
+	}
+
+	.sv {
+		width: 100svw;
+		min-height: 100svh;
+	}
+
+	.lv {
+		width: 100lvw;
+		min-height: 100lvh;
+	}
+
+	.dv {
+		width: 100dvw;
+		min-height: 100dvh;
+	}
+
 	.view,
 	.safe,
 	.zoom {
