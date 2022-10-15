@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { SIZE } from 'svelte-petit-utils';
-	import store, { KeyCapture, Browser, Viewport } from '$lib';
+	import { __BROWSER__, type SIZE } from 'svelte-petit-utils';
+	import store, { KeyCapture, Browser, Viewport, XY } from '$lib';
 	import {
 		ua,
 		cpu,
@@ -196,25 +196,73 @@
 <p />
 <hr />
 <p>
-	locate : {JSON.stringify($locate)}
+	locate : <br />
+	<XY data={[[$locate.longitude, $locate.latitude]]} vw={180} vh={90} width="24em" height="12em" />
 </p>
 <p>
-	gyro : {JSON.stringify($gyro)}
+	{#if __BROWSER__ && DeviceOrientationEvent?.requestPermission}
+		<button
+			on:click={() =>
+				DeviceOrientationEvent.requestPermission().then((state) => state === 'granted')}
+			>permission</button
+		>
+	{/if}
+	gyro : {$gyro.absolute}<br />
+	<XY data={[[$gyro.alpha], [$gyro.beta], [$gyro.gamma]]} view={100} size="10em" />
 </p>
 <p>
-	gravity : {JSON.stringify($gravity)}
+	{#if __BROWSER__ && DeviceMotionEvent?.requestPermission}
+		<button
+			on:click={() => DeviceMotionEvent.requestPermission().then((state) => state === 'granted')}
+			>permission</button
+		>
+	{/if}
+	gravity :<br />
+	<XY
+		data={[
+			[10 * $gravity.x, 10 * $gravity.y],
+			[10 * $gravity.x, 10 * $gravity.z]
+		]}
+		view={100}
+		size="10em"
+	/>
 </p>
 <p>
-	rotate : {JSON.stringify($rotate)}
+	rotate : {$rotate.absolute}<br />
+	<XY data={[[$rotate.alpha], [$rotate.beta], [$rotate.gamma]]} view={100} size="10em" />
 </p>
 <p>
-	accel : {JSON.stringify($accel)}
+	accel :<br />
+	<XY
+		data={[
+			[10 * $accel.x, 10 * $accel.y],
+			[10 * $accel.x, 10 * $accel.z]
+		]}
+		view={100}
+		size="10em"
+	/>
 </p>
 <p>
-	speed : {JSON.stringify($speed)}
+	speed :<br />
+	<XY
+		data={[
+			[2 * $speed.x, 2 * $speed.y],
+			[2 * $speed.x, 2 * $speed.z]
+		]}
+		view={100}
+		size="10em"
+	/>
 </p>
 <p>
-	point : {JSON.stringify($point)}
+	point :<br />
+	<XY
+		data={[
+			[1 * $point.x, 1 * $point.y],
+			[1 * $point.x, 1 * $point.z]
+		]}
+		view={100}
+		size="10em"
+	/>
 </p>
 <p>
 	gamepads : {JSON.stringify($gamepads)}
@@ -226,6 +274,22 @@
 <div class="dv" bind:clientWidth={dv[0]} bind:clientHeight={dv[1]}>.</div>
 
 <style>
+	:global(svg) {
+		background-color: #aaffcc;
+	}
+	:global(.base) {
+		stroke: #ffffff;
+	}
+	:global(.path0) {
+		stroke: #aa88ff;
+	}
+	:global(.path1) {
+		stroke: #ffaa88;
+	}
+	:global(.path2) {
+		stroke: #88aaff;
+	}
+
 	.v {
 		width: 100vw;
 		height: 100vh;

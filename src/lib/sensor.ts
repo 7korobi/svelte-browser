@@ -1,6 +1,6 @@
 import { __BROWSER__ } from 'svelte-petit-utils';
 import { listen } from 'svelte/internal';
-import { derived, readable } from 'svelte/store';
+import { derived, readable, writable } from 'svelte/store';
 import { abg_new, state, xyz_new } from './store';
 
 function geo_to_s(n: number, plus: string, minus: string) {
@@ -69,6 +69,16 @@ function abg_set(base: ReturnType<typeof abg_new>, tgt: ABG) {
 	}
 }
 
+function coord_set(base: typeof state.locate, tgt: GeolocationCoordinates) {
+	base.longitude = tgt.longitude;
+	base.latitude = tgt.latitude;
+	base.accuracy = tgt.accuracy;
+	base.altitudeAccuracy = tgt.altitudeAccuracy;
+	base.altitude = tgt.altitude;
+	base.heading = tgt.heading;
+	base.speed = tgt.speed;
+}
+
 export const locate = readable(state.locate, (set) => {
 	if (!(__BROWSER__ && window?.navigator?.geolocation)) return;
 	const watch_id = navigator.geolocation.watchPosition(
@@ -79,7 +89,7 @@ export const locate = readable(state.locate, (set) => {
 				'W'
 			)} ${mks_to_s(coords.altitude)}`;
 			state.locate.timestamp = timestamp;
-			Object.assign(state.locate, coords);
+			coord_set(state.locate, coords);
 			set(state.locate);
 		},
 		({ code }) => {
@@ -100,17 +110,19 @@ export const locate = readable(state.locate, (set) => {
 export const gyro = readable(state.gyro, (set) => {
 	if (!__BROWSER__) return;
 
-	const bye = listen(window, 'deviceorientation', ((o: DeviceOrientationEvent) => {
+	const bye = listen(window, 'deviceorientation', ((o: any) => {
 		state.gyro.label = '';
-		Object.assign(state.gyro, o);
+		abg_set(state.gyro, o);
 		set(state.gyro);
 	}) as any);
+
 	return bye;
 });
 
 const devicemotion = readable(0, (set) => {
 	if (!__BROWSER__) return;
 
+	let step = 0;
 	const bye = listen(window, 'devicemotion', (({
 		interval,
 		acceleration,
@@ -123,8 +135,9 @@ const devicemotion = readable(0, (set) => {
 		xyz_set(state.speed, xyz_plus(state.speed, state.accel));
 		xyz_set(state.point, xyz_plus(state.point, state.speed));
 
-		set(interval);
+		set(step++);
 	}) as any);
+
 	return bye;
 });
 
