@@ -16,15 +16,16 @@
 <svg viewBox="-{vw} -{vh} {vw * 2} {vh * 2}" {width} {height}>
 	<g class="edgePath">
 		<path class="base dotted" d="M{-vw},0L{vw},0M0,{-vh}L0,{vh}" />
-		{#each data as [x, y], idx}
-			{#if y}
+		{#each data as val, idx}
+			{#if 2 === val.length}
+				{@const [x,y] = val}
 				<path class="path{idx} {style}" d="M{x},{-y}L0,0" />
 				<text class="path{idx}" text-anchor="middle" {x} y={-y}>{parseInt(x)} x {parseInt(y)}</text>
 			{:else}
-				{@const rx = 0.9 * view * Math.sin(x * by_deg)}
-				{@const ry = 0.9 * view * Math.cos(x * by_deg)}
+				{@const rx = 0.9 * view * Math.sin(val[0] * by_deg)}
+				{@const ry = 0.9 * view * Math.cos(val[0] * by_deg)}
 				<path class="path{idx} {style}" d="M{rx},{-ry}L0,0" />
-				<text class="path{idx}" text-anchor="middle" x={rx} y={-ry}>{parseInt(x)}</text>
+				<text class="path{idx}" text-anchor="middle" x={rx} y={-ry}>{parseInt(val[0])}</text>
 			{/if}
 		{/each}
 	</g>
