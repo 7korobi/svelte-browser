@@ -1,6 +1,6 @@
 {
 	"name": "svelte-browser",
-	"version": "0.3.22",
+	"version": "0.4.0",
 	"homepage": "https://github.com/7korobi/svelte-browser/blob/main/src/lib/",
 	"license": "MIT",
 	"keywords": [
