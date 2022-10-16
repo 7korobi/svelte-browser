@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { __BROWSER__, type SIZE } from 'svelte-petit-utils';
-	import store, { KeyCapture, Browser, Viewport, XY } from '$lib';
+	import store, { KeyCapture, Browser, Viewport, XY, labels } from '$lib';
 	import {
 		ua,
 		cpu,
@@ -27,6 +27,7 @@
 		point,
 		gamepads
 	} from '$lib';
+	import { identity } from 'svelte/internal';
 
 	const {
 		isActive,
@@ -55,7 +56,6 @@
 	let lv = [0, 0] as SIZE;
 	let dv = [0, 0] as SIZE;
 
-	$: console.log($keys);
 	$: [zoom_top, zoom_right, zoom_bottom, zoom_left] = $zoomOffset;
 	$: [view_top, view_right, view_bottom, view_left] = $viewOffset;
 	$: [safe_top, safe_right, safe_bottom, safe_left] = $safeOffset;
@@ -69,7 +69,6 @@
 	$: console.log('$zoomPoint', $zoomPoint);
 	$: console.log('$viewPoint', $viewPoint);
 	$: console.log('$safePoint', $safePoint);
-	$: console.log('$keypadSize', $keypadSize);
 </script>
 
 <Browser ratio={1.0} isDefaultSafeArea={true} />
@@ -264,9 +263,64 @@
 		size="10em"
 	/>
 </p>
-<p>
-	gamepads : {JSON.stringify($gamepads)}
-</p>
+{#each $gamepads as pad, idx}
+	<hr />
+	<p>
+		{#if pad}
+			{@const {
+				axes,
+				buttons,
+				hapticActuators,
+				vibrationActuator,
+				timestamp,
+				id,
+				index,
+				mapping,
+				connected
+			} = pad}
+			<div class="flex">
+				<div class="item">
+					<XY
+						data={[
+							[100 * axes[0], -100 * axes[1]],
+							[100 * axes[2], -100 * axes[3]],
+							[100 * (axes[4] ?? 0), -100 * (axes[5] ?? 0)]
+						]}
+						view={100}
+						size="10em"
+					/>
+				</div>
+				<div class="item">
+					{idx}
+					{index} : {connected} : {mapping} : {timestamp}<br />
+					{id}<br />
+					{#if hapticActuators}
+						haptic :
+						{#each hapticActuators as actuator, idx}
+							{actuator.type} .
+						{/each}<br />
+					{/if}
+					{#if vibrationActuator}
+						vibration :
+						{vibrationActuator.type} .
+						<br />
+					{/if}
+					{#each buttons as { pressed, touched, value }, idx}
+						{#if 0 === idx % 4}<br />{/if}
+						<meter min="0" max="1" low="0.2" high="0.8" {value}>
+							{#if touched}T{/if}
+							{#if pressed}P{/if}
+							{value}
+						</meter>
+						{labels.buttons[idx]} /
+					{/each}
+				</div>
+			</div>
+		{:else}
+			not gamepad.
+		{/if}
+	</p>
+{/each}
 
 <div class="v" bind:clientWidth={v[0]} bind:clientHeight={v[1]}>.</div>
 <div class="sv" bind:clientWidth={sv[0]} bind:clientHeight={sv[1]}>.</div>
@@ -288,6 +342,15 @@
 	}
 	:global(.path2) {
 		stroke: #88aaff;
+	}
+
+	.flex {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+	.item {
+		flex: auto;
 	}
 
 	.v {
