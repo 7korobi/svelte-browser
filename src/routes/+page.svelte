@@ -1,6 +1,14 @@
 <script lang="ts">
 	import { __BROWSER__, type SIZE } from 'svelte-petit-utils';
-	import store, { KeyCapture, Browser, Viewport, XY, labels } from '$lib';
+	import store, {
+		KeyCapture,
+		Browser,
+		Viewport,
+		XY,
+		labels,
+		IOS_DeviceOrientationRequestButton,
+		IOS_DeviceMotionRequestButton
+	} from '$lib';
 	import {
 		ua,
 		cpu,
@@ -199,23 +207,12 @@
 	<XY data={[[$locate.longitude, $locate.latitude]]} vw={180} vh={90} width="24em" height="12em" />
 </p>
 <p>
-	{#if __BROWSER__ && DeviceOrientationEvent?.requestPermission}
-		<button
-			on:click={() =>
-				DeviceOrientationEvent.requestPermission().then((state) => state === 'granted')}
-			>permission</button
-		>
-	{/if}
+	<IOS_DeviceOrientationRequestButton>request</IOS_DeviceOrientationRequestButton>
 	gyro : {$gyro.absolute}<br />
 	<XY data={[[$gyro.alpha], [$gyro.beta], [$gyro.gamma]]} view={100} size="10em" />
 </p>
 <p>
-	{#if __BROWSER__ && DeviceMotionEvent?.requestPermission}
-		<button
-			on:click={() => DeviceMotionEvent.requestPermission().then((state) => state === 'granted')}
-			>permission</button
-		>
-	{/if}
+	<IOS_DeviceMotionRequestButton>request</IOS_DeviceMotionRequestButton>
 	gravity :<br />
 	<XY
 		data={[
