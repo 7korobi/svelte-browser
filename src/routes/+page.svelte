@@ -6,6 +6,10 @@
 		Viewport,
 		XY,
 		labels,
+		AudioContext,
+		AudioStereoPanner,
+		AudioGain,
+		Audio,
 		IOS_DeviceOrientationRequestButton,
 		IOS_DeviceMotionRequestButton
 	} from '$lib';
@@ -64,6 +68,12 @@
 	let lv = [0, 0] as SIZE;
 	let dv = [0, 0] as SIZE;
 
+	let audio = {} as {
+		state: AudioContextState;
+		pan: number;
+		volume: number;
+	};
+
 	$: [zoom_top, zoom_right, zoom_bottom, zoom_left] = $zoomOffset;
 	$: [view_top, view_right, view_bottom, view_left] = $viewOffset;
 	$: [safe_top, safe_right, safe_bottom, safe_left] = $safeOffset;
@@ -88,6 +98,40 @@
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 
 <hr />
+
+<h3>audio</h3>
+
+<AudioContext bind:state={audio.state}>
+	<AudioStereoPanner bind:pan={audio.pan}>
+		<AudioGain bind:volume={audio.volume}>
+			<Audio
+				crossorigin="anonymous"
+				type="audio/mpeg"
+				src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/858/outfoxing.mp3"
+				controls
+			/>
+		</AudioGain>
+	</AudioStereoPanner>
+</AudioContext>
+<button
+	on:click={() => {
+		audio.state = 'running';
+	}}>run audio.</button
+>
+<input
+	type="range"
+	id="volume"
+	name="volume"
+	step="0.01"
+	min="0"
+	max="1"
+	bind:value={audio.volume}
+/>
+<input type="range" id="volume" name="volume" step="0.01" min="-1" max="1" bind:value={audio.pan} />
+<p>{JSON.stringify(audio)}</p>
+
+<hr />
+
 <h3>state & device</h3>
 <p>
 	{#if $isPortrait}<span>Portrait size</span>{/if}
