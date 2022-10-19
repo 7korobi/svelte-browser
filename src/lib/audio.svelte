@@ -7,7 +7,7 @@
 	const parentNode = getContext<Readable<AudioNode>>('audio-node');
 	const audioContext = getContext<Readable<AudioContext>>('audio-context');
 
-	let mediaElement: HTMLMediaElement;
+	export let mediaElement: HTMLMediaElement;
 
 	$: if (mediaElement)
 		$audioNode = new MediaElementAudioSourceNode($audioContext, { mediaElement });

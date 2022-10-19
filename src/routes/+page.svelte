@@ -68,11 +68,24 @@
 	let lv = [0, 0] as SIZE;
 	let dv = [0, 0] as SIZE;
 
+	let mic_player: HTMLMediaElement;
+	let mic_stream: MediaStream;
+	let echoCancellation = true;
 	let audio = {} as {
 		state: AudioContextState;
-		pan: number;
 		volume: number;
 	};
+
+	(async () => {
+		if (!__BROWSER__) return;
+		audio.devices = await navigator.mediaDevices.enumerateDevices();
+		const deviceId =
+			audio.devices.filter(({ kind, label }) => kind === 'audioinput' && label.match(/既定/) )[0] || audio.devices[0];
+		mic_stream = await navigator.mediaDevices.getUserMedia({ audio: { deviceId, echoCancellation } });
+	})();
+	$: if (mic_player && mic_stream) {
+		mic_player.srcObject = mic_stream;
+	}
 
 	$: [zoom_top, zoom_right, zoom_bottom, zoom_left] = $zoomOffset;
 	$: [view_top, view_right, view_bottom, view_left] = $viewOffset;
@@ -102,20 +115,30 @@
 <h3>audio</h3>
 
 <AudioContext bind:state={audio.state}>
-	<AudioStereoPanner bind:pan={audio.pan}>
-		<AudioGain bind:volume={audio.volume}>
+	<Audio bind:mediaElement={mic_player} controls />
+	<AudioGain bind:volume={audio.volume}>
+		<AudioStereoPanner pan={1}>
 			<Audio
 				crossorigin="anonymous"
 				type="audio/mpeg"
 				src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/858/outfoxing.mp3"
 				controls
 			/>
-		</AudioGain>
-	</AudioStereoPanner>
+		</AudioStereoPanner>
+		<AudioStereoPanner pan={-1}>
+			<Audio
+				crossorigin="anonymous"
+				type="audio/mpeg"
+				src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/858/outfoxing.mp3"
+				controls
+			/>
+		</AudioStereoPanner>
+	</AudioGain>
 </AudioContext>
 <button
 	on:click={() => {
 		audio.state = 'running';
+		mic_player.play();
 	}}>run audio.</button
 >
 <input
@@ -124,10 +147,9 @@
 	name="volume"
 	step="0.01"
 	min="0"
-	max="1"
+	max="2"
 	bind:value={audio.volume}
 />
-<input type="range" id="volume" name="volume" step="0.01" min="-1" max="1" bind:value={audio.pan} />
 <p>{JSON.stringify(audio)}</p>
 
 <hr />
