@@ -11,7 +11,8 @@
 		AudioGain,
 		Audio,
 		IOS_DeviceOrientationRequestButton,
-		IOS_DeviceMotionRequestButton
+		IOS_DeviceMotionRequestButton,
+		onResize
 	} from '$lib';
 	import {
 		ua,
@@ -68,6 +69,11 @@
 	let lv = [0, 0] as SIZE;
 	let dv = [0, 0] as SIZE;
 
+	const setV = (size: SIZE) => (v = size);
+	const setSV = (size: SIZE) => (sv = size);
+	const setLV = (size: SIZE) => (lv = size);
+	const setDV = (size: SIZE) => (dv = size);
+
 	let mic_player: HTMLMediaElement;
 	let mic_stream: MediaStream;
 	let echoCancellation = true;
@@ -80,8 +86,11 @@
 		if (!__BROWSER__) return;
 		audio.devices = await navigator.mediaDevices.enumerateDevices();
 		const deviceId =
-			audio.devices.filter(({ kind, label }) => kind === 'audioinput' && label.match(/既定/) )[0] || audio.devices[0];
-		mic_stream = await navigator.mediaDevices.getUserMedia({ audio: { deviceId, echoCancellation } });
+			audio.devices.filter(({ kind, label }) => kind === 'audioinput' && label.match(/既定/))[0] ||
+			audio.devices[0];
+		mic_stream = await navigator.mediaDevices.getUserMedia({
+			audio: { deviceId, echoCancellation }
+		});
 	})();
 	$: if (mic_player && mic_stream) {
 		mic_player.srcObject = mic_stream;
@@ -97,9 +106,6 @@
 	$: [view_width, view_height] = $viewSize;
 	$: [safe_width, safe_height] = $safeSize;
 	$: [keypad_width, keypad_height] = $keypadSize;
-	$: console.log('$zoomPoint', $zoomPoint);
-	$: console.log('$viewPoint', $viewPoint);
-	$: console.log('$safePoint', $safePoint);
 </script>
 
 <Browser ratio={1.0} isDefaultSafeArea={true} />
@@ -385,10 +391,10 @@
 	</p>
 {/each}
 
-<div class="v" bind:clientWidth={v[0]} bind:clientHeight={v[1]}>.</div>
-<div class="sv" bind:clientWidth={sv[0]} bind:clientHeight={sv[1]}>.</div>
-<div class="lv" bind:clientWidth={lv[0]} bind:clientHeight={lv[1]}>.</div>
-<div class="dv" bind:clientWidth={dv[0]} bind:clientHeight={dv[1]}>.</div>
+<span class="v" use:onResize={setV} />
+<span class="sv" use:onResize={setSV} />
+<span class="lv" use:onResize={setLV} />
+<span class="dv" use:onResize={setDV} />
 
 <style>
 	:global(svg) {
@@ -417,23 +423,27 @@
 	}
 
 	.v {
+		display: inline-block;
 		width: 100vw;
 		height: 100vh;
 	}
 
 	.sv {
+		display: inline-block;
 		width: 100svw;
-		min-height: 100svh;
+		height: 100svh;
 	}
 
 	.lv {
+		display: inline-block;
 		width: 100lvw;
-		min-height: 100lvh;
+		height: 100lvh;
 	}
 
 	.dv {
+		display: inline-block;
 		width: 100dvw;
-		min-height: 100dvh;
+		height: 100dvh;
 	}
 
 	.view,

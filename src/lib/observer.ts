@@ -8,25 +8,21 @@ type ElementResize = (rect: SIZE) => any;
 
 const resized = new Map<Element, ElementResize>();
 const resizes = __BROWSER__
-	? new ResizeObserver(([entry]) => {
-			const { offsetWidth, offsetHeight } = entry.target as HTMLElement;
-			resized.get(entry.target)!([offsetWidth, offsetHeight]);
+	? new ResizeObserver((entries) => {
+			const { contentRect, target } = entries[0];
+			const { width, height } = contentRect;
+			resized.get(target)!([width, height]);
 	  })
 	: undefined;
 
 export function onResize(el: HTMLElement, cb: ElementResize) {
-	console.log('init resizer', el);
 	update(cb);
-	resized.set(el, cb);
 	resizes?.observe(el);
 	return { update, destroy };
 
 	function update(newCb: ElementResize) {
 		cb = newCb;
-		console.log('update resizer', cb);
 		resized.set(el, cb);
-		const { offsetWidth, offsetHeight } = el;
-		cb([offsetWidth, offsetHeight]);
 		return;
 	}
 
