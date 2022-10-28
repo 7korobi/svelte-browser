@@ -23,6 +23,8 @@ export function onResize(el: HTMLElement, cb: ElementResize) {
 	function update(newCb: ElementResize) {
 		cb = newCb;
 		resized.set(el, cb);
+		const { offsetWidth, offsetHeight } = el;
+		cb([offsetWidth, offsetHeight]);
 		return;
 	}
 
