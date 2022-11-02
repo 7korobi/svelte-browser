@@ -1,4 +1,5 @@
 import XY from './xy.svelte';
+import Exit from './exit.svelte';
 import Browser from './main.svelte';
 import Viewport from './viewport.svelte';
 import KeyCapture from './key-capture.svelte';
@@ -18,10 +19,11 @@ export * from './device.js';
 export * from './measure.js';
 export * from './observer.js';
 export {
+	XY,
+	Exit,
 	Browser,
 	KeyCapture,
 	Viewport,
-	XY,
 	AudioContext,
 	AudioStereoPanner,
 	AudioGain,
