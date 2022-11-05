@@ -1,7 +1,7 @@
 import { __BROWSER__ } from 'svelte-petit-utils';
 import { listen } from 'svelte/internal';
 import { derived, readable, writable } from 'svelte/store';
-import { abg_new, state, xyz_new } from './store';
+import { abg_new, state, xyz_new } from './store.js';
 
 function geo_to_s(n: number, plus: string, minus: string) {
 	let mark = plus;

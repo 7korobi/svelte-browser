@@ -1,7 +1,7 @@
 import { __BROWSER__ } from 'svelte-petit-utils';
 import { listen } from 'svelte/internal';
 import { readable } from 'svelte/store';
-import { state } from './store';
+import { state } from './store.js';
 
 export const labels = {
 	buttons: [
